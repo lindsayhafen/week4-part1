@@ -9,3 +9,40 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## 1. Confidence intervals
+- If sample fits requirements in notes:
+(always look at data, do exploratory data visualization, decide that the data fits)
+
+- Create vector otter_length (put sample data into frame)
+-t.test results are for a null of mean otter length = 0, so not super informative
+
+```{r}
+otter_length <- c(38, 41, 50, 27, 32, 41, 48, 60, 43)
+
+t.test(otter_length)
+```
+
+## T-test (1-sample t-test)
+- See a claim: mean otter length is 50 inches
+(look at data, do backgound exploration etc)
+-test my sample against this claim
+
+```{r}
+otter_test <- t.test(x = otter_length, mu = 50)
+otter_test
+```
+
+## Two-sample t-test
+- Welch does not assume equal variance, student t-test does
+
+
+```{r}
+desert_bighorns <- c(32, 44, 18, 26, 50, 33, 42, 20)
+sierra_bighorns <- c(28, 31, 40, 42, 26, 29, 31)
+
+t.test(x = desert_bighorns, y = sierra_bighorns)
+```
+
+- Probably not enough evidence to reject the null hypothesis...
+
+
