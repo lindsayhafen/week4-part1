@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
 ## 1. Confidence intervals
@@ -44,5 +45,69 @@ t.test(x = desert_bighorns, y = sierra_bighorns)
 ```
 
 - Probably not enough evidence to reject the null hypothesis...
+
+## END PART 1
+
+## Part 2: Two-sample t-test
+
+- View data - using console and View function
+- Basic wrangling (we want the compact car and SUV)
+
+```{r}
+compact_suv <- mpg %>% 
+  filter(class %in% c("compact", "suv"))
+```
+
+## Exploratory data visualization
+
+histograms: must understand distribution of data
+
+```{r}
+ggplot(data = compact_suv, aes(x = cty)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~class) #so far no concerns about distributions (seem close enough to normal distribution)
+```
+
+### Quantile-quantile plot to examine how close to normal distribution data is
+
+```{r}
+ggplot(data = compact_suv, aes(sample = cty)) +
+  geom_qq() +
+  facet_wrap(~class)
+```
+
+### Descriptive summary stats
+
+n with empty () tells sample size
+
+```{r}
+car_stats <- compact_suv %>% 
+  group_by(class) %>% 
+  summarise(mean_cty = mean(cty), 
+            sd_cty = sd(cty),
+            n = n())
+
+car_stats
+```
+
+### 2-sample t-test
+
+Create vectors containing observations for each sample (city gas milage)
+
+-If you use select, t-test will not work b/c it does not work with data frames, it works with vectors. Pull stores as a vector of values
+```{r}
+compact_sample <- compact_suv %>% 
+  filter(class == "compact") %>% 
+  pull(cty)
+
+suv_sample <- compact_suv %>% 
+  filter(class == "suv") %>% 
+  pull(cty)
+
+t.test(x = compact_sample, y = suv_sample)
+```
+
+
+
 
 
